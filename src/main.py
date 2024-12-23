@@ -9,7 +9,11 @@ def parse_file(file_path: str) -> dict:
         lines = lines.split("EOF")[0]
         lines = lines.split("\n")
         
-        for line in lines:
+        for i, line in enumerate(lines):
+            if i % 1000 == 0:
+                # print(f"\tProcessed {100*i/len(lines): .2f}% of the total lines...", end='\r')
+                pass
+
             line = line.strip().split(" ")
             line = list(filter(None, line)) # remove empty strings from list
             if line == []:
@@ -27,21 +31,25 @@ def parse_file(file_path: str) -> dict:
 
     return nodes
 
-if __name__ == '__main__':
-    # nodes = parse_file('data/eil51.tsp')
-    # graph = Graph(nodes)
-    # graph.draw()
+def create_graph(file_path):
+    nodes = parse_file(file_path)
+    graph = Graph(nodes)
+    return graph
 
-    base_dir = "../test_data"
+def save_graphs_into_disk(): # Just needed once 
+    base_dir = "test_data"
     test_files = os.listdir(base_dir)
     progress = 0
     for test_file in test_files:
-        print(f"Processing file: {test_file}")
         progress += 1
-        nodes = parse_file(f'{base_dir}/{test_file}')
-
-        graph = Graph(nodes)
+        print(f"Processing file: {test_file}")
+        graph = create_graph(f'{base_dir}/{test_file}')
+        
         title = test_file.replace(".", "_")
-        graph.draw(f"../plots/graphs/{title}.png", title)
+        graph.draw(f"plots/graphs/{title}.png", title)
+        graph.save(f"graphs/{title}.pkl")
 
-        print(f'({100*progress/len(test_files): .2f}%) Graph for {test_file} has been created.')
+        print(f'({100*progress/len(test_files): .2f}% done...)\n')
+
+if __name__ == '__main__':
+    pass
