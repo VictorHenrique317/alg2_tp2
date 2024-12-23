@@ -1,3 +1,4 @@
+from branch_and_bound import *
 from graph import Graph
 import os
 
@@ -44,6 +45,10 @@ def save_graphs_into_disk(): # Just needed once
         progress += 1
         print(f"Processing file: {test_file}")
         graph = create_graph(f'{base_dir}/{test_file}')
+        if len(graph.get_nodes()) > 1000:
+            print("Skipping file due to high number of nodes...")
+            continue
+        graph.calculate_distances()
         
         title = test_file.replace(".", "_")
         graph.draw(f"plots/graphs/{title}.png", title)
@@ -52,4 +57,46 @@ def save_graphs_into_disk(): # Just needed once
         print(f'({100*progress/len(test_files): .2f}% done...)\n')
 
 if __name__ == '__main__':
-    pass
+    base_dir = "graphs"
+    graph_pickles = os.listdir(base_dir)
+
+    # save_graphs_into_disk()
+
+    for pickle in graph_pickles:
+        if pickle != "eil51_tsp.pkl":
+            continue
+
+        # nodes = {
+        #     "1": (16.47, 96.10),
+        #     "2": (16.47, 94.44),
+        #     "3": (20.09, 92.54),
+        #     "4": (22.39, 93.37),
+        #     "5": (25.23, 97.24),
+        #     "6": (22.00, 96.05),
+        #     "7": (20.47, 97.02),
+        #     "8": (17.20, 96.29),
+        #     "9": (16.30, 97.38),
+        #     "10": (14.05, 98.12),
+        #     "11": (16.53, 97.38),
+        #     "12": (21.52, 95.59),
+        #     "13": (19.41, 97.13),
+        #     "14": (20.09, 94.55),
+        # }
+         # Best route found: ['1', '10', '9', '11', '8', '13', '7', '12', '6', '5', '4', '3', '14', '2', '1']
+        # Best cost: 30.878503892588
+
+        # nodes = {
+        #     "1": (16.47, 96.10),
+        #     "2": (16.47, 94.44),
+        #     "3": (20.09, 92.54),
+        #     "4": (22.39, 93.37),
+        #     "5": (25.23, 97.24),
+        #     "6": (22.00, 96.05),
+        # }
+
+        graph = Graph.load(f'{base_dir}/{pickle}')
+        best_route, best_cost = branch_and_bound(graph, start_node=1)
+        print("Best route found:", best_route)
+        print("Best cost:", best_cost)
+
+        break

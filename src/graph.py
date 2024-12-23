@@ -1,6 +1,5 @@
 import networkx as nx
 import matplotlib.pyplot as plt
-import math
 import numpy as np
 import pickle
 
@@ -10,17 +9,35 @@ class Graph:
             return
         
         print(f"-> Creating graph for {len(nodes)} nodes")
-        self.nodes = nodes
+        self.calculated_distances = False
         self.K = nx.Graph()
         self.pos = {node: coord for node, coord in nodes.items()}
         self.K.add_nodes_from(self.pos.keys())
 
-        # self.K.add_weighted_edges_from(edges)
         print(f"-> Graph created for {len(nodes)} nodes")
 
+    def get_distance(self, u, v) -> float:
+        if self.calculated_distances == True:
+            edge_data = self.K.get_edge_data(u, v)
+            return edge_data['weight']
+
+        u_x = self.pos[u][0]
+        u_y = self.pos[u][1]
+
+        v_x = self.pos[v][0]
+        v_y = self.pos[v][1]
+
+        return np.linalg.norm(np.array([v_x, v_y]) - np.array([u_x, u_y]))
+    
+    def get_nodes(self):
+        return list(self.pos.keys())
+    
+    def get_coordinates(self):
+        return list(self.pos.values())
+
     def calculate_distances(self): # Heavy computation
-        node_labels = list(self.nodes.keys())
-        coordinates = np.array(list(self.nodes.values()))
+        node_labels = self.get_nodes()
+        coordinates = np.array(self.get_coordinates())
 
         num_nodes = len(node_labels)
         edges = []
@@ -37,6 +54,9 @@ class Graph:
 
         print(end='\n')
         print(f"-> Computed distances for {len(node_labels)} nodes")
+        
+        self.calculated_distances = True 
+        self.K.add_weighted_edges_from(edges)
 
     @staticmethod
     def load(filepath: str):
@@ -45,13 +65,15 @@ class Graph:
         graph = Graph({})
         graph.K = data['graph']
         graph.pos = data['pos']
+        graph.calculated_distances = data['calculated_distances']
         print(f"Graph loaded from {filepath}")
         return graph
     
     def save(self, filepath: str):
         data = {
             'graph': self.K,
-            'pos': self.pos
+            'pos': self.pos,
+            'calculated_distances': self.calculated_distances
         }
         with open(filepath, 'wb') as file:
             pickle.dump(data, file)
