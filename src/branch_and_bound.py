@@ -1,6 +1,9 @@
 import math
-import heapq  # for our priority queue
+import heapq
 
+from utils import measure
+
+@measure
 def branch_and_bound(graph, start_node=None):
     """
     Solve TSP using a Branch-and-Bound approach with best-first search (priority queue).

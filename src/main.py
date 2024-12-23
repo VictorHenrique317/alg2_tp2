@@ -1,6 +1,10 @@
+import time
 from branch_and_bound import *
 from graph import Graph
 import os
+import contextlib
+import os
+import functools
 
 def parse_file(file_path: str) -> dict:
     nodes = dict()
@@ -82,7 +86,7 @@ if __name__ == '__main__':
         #     "13": (19.41, 97.13),
         #     "14": (20.09, 94.55),
         # }
-         # Best route found: ['1', '10', '9', '11', '8', '13', '7', '12', '6', '5', '4', '3', '14', '2', '1']
+        # Best route found: ['1', '10', '9', '11', '8', '13', '7', '12', '6', '5', '4', '3', '14', '2', '1']
         # Best cost: 30.878503892588
 
         # nodes = {
@@ -94,9 +98,10 @@ if __name__ == '__main__':
         #     "6": (22.00, 96.05),
         # }
 
+        # graph = Graph(nodes)
         graph = Graph.load(f'{base_dir}/{pickle}')
-        best_route, best_cost = branch_and_bound(graph, start_node=1)
-        print("Best route found:", best_route)
-        print("Best cost:", best_cost)
 
-        break
+        best_route, best_cost = branch_and_bound(graph, start_node=1)
+
+        print("INFO: Best route found:", best_route)
+        print("INFO: Best cost:", best_cost)
