@@ -4,7 +4,7 @@ import heapq
 from utils import measure
 
 @measure
-def branch_and_bound(graph, start_node=None):
+def branch_and_bound(graph, start_node, result_queue):
     """
     Solve TSP using a Branch-and-Bound approach with best-first search (priority queue).
     Distances are fetched via graph.get_distance(u,v) on the fly.
@@ -154,4 +154,5 @@ def branch_and_bound(graph, start_node=None):
     if best_path_labels:
         best_path_labels.append(start_node)  # close the loop for clarity
 
-    return best_path_labels, best_cost
+    # return best_path_labels, best_cost
+    result_queue.put((best_path_labels, best_cost))  # Send the result back

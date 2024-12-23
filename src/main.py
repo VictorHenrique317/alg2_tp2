@@ -1,3 +1,4 @@
+from multiprocessing import Process, Queue
 import time
 from branch_and_bound import *
 from graph import Graph
@@ -5,6 +6,7 @@ import os
 import contextlib
 import os
 import functools
+from concurrent.futures import ThreadPoolExecutor, TimeoutError
 
 def parse_file(file_path: str) -> dict:
     nodes = dict()
@@ -67,9 +69,6 @@ if __name__ == '__main__':
     # save_graphs_into_disk()
 
     for pickle in graph_pickles:
-        if pickle != "eil51_tsp.pkl":
-            continue
-
         # nodes = {
         #     "1": (16.47, 96.10),
         #     "2": (16.47, 94.44),
@@ -101,7 +100,23 @@ if __name__ == '__main__':
         # graph = Graph(nodes)
         graph = Graph.load(f'{base_dir}/{pickle}')
 
-        best_route, best_cost = branch_and_bound(graph, start_node=1)
+        result_queue = Queue()
 
-        print("INFO: Best route found:", best_route)
-        print("INFO: Best cost:", best_cost)
+        # Create a new process
+        process = Process(target=branch_and_bound, args=(graph, 1, result_queue))
+        process.start()
+
+        # Wait for the process to complete or timeout
+        process.join(timeout=1800)  # 30 minutes
+
+        if process.is_alive():
+            print("Function timed out. Terminating process...")
+            process.terminate()  # Forcefully terminate the process
+            process.join()  # Ensure the process finishes cleanly
+        else:
+            # Retrieve the result from the queue if the function finished in time
+            if not result_queue.empty():
+                best_route, best_cost = result_queue.get()
+                print(f"Best Route: {best_route}, Best Cost: {best_cost}")
+            else:
+                print("No result was returned.")
