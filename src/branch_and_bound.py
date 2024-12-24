@@ -1,19 +1,18 @@
 import math
-import heapq
 
 from utils import measure
 
 @measure
 def branch_and_bound(graph, start_node, result_queue):
     """
-    Solve TSP using a Branch-and-Bound approach with best-first search (priority queue).
+    Solve TSP using a Branch-and-Bound approach with Depth-First Search.
     Distances are fetched via graph.get_distance(u,v) on the fly.
-    
+
     :param graph: a Graph object with:
-                  - graph.nodes: dict {node_label: (x, y)}
-                  - graph.get_distance(u, v) -> float
-    :param start_node: a node label to start from. If None, pick an arbitrary node.
-    :return: (best_path, best_cost)
+                  - graph.get_nodes(): list of node labels
+                  - graph.get_distance(u, v): float, distance between node u and node v
+    :param start_node: label of the node to start from; if None, pick an arbitrary node
+    :param result_queue: a multiprocessing or threading queue to store (best_path, best_cost)
     """
     # --------------------------
     # 1) Preliminaries
@@ -21,9 +20,11 @@ def branch_and_bound(graph, start_node, result_queue):
     node_list = graph.get_nodes()
     n = len(node_list)
     if n == 0:
-        return [], 0.0
+        result_queue.put(([], 0.0))
+        return
     if n == 1:
-        return node_list, 0.0
+        result_queue.put((node_list, 0.0))
+        return
 
     # Map node_label -> index
     index_of = {node: idx for idx, node in enumerate(node_list)}
@@ -33,12 +34,11 @@ def branch_and_bound(graph, start_node, result_queue):
     # Decide on start node
     if start_node is None:
         start_node = node_list[0]
-    start_node = str(start_node)
+    start_node = str(start_node)  # ensure it's a string if needed
     start_idx = index_of[start_node]
 
     # --------------------------
     # 2) Precompute minimal outgoing edge for each node (for bounding)
-    #    This is O(n^2) in the worst case, but uses far less memory than a full matrix.
     # --------------------------
     def minimal_out_edge(idx):
         """Returns the minimal distance from node_idx to any other node."""
@@ -60,7 +60,7 @@ def branch_and_bound(graph, start_node, result_queue):
     # --------------------------
     def lower_bound_estimate(cost_so_far, visited_array):
         """
-        Naive bounding: current cost plus the minimal edge for each unvisited node.
+        Naive bounding: current cost + sum of minimal edges from each unvisited node.
         """
         bound = cost_so_far
         for i in range(n):
@@ -69,90 +69,65 @@ def branch_and_bound(graph, start_node, result_queue):
         return bound
 
     # --------------------------
-    # 4) Priority Queue Initialization
-    #    Each state = (bound, cost, visited_count, last_node_idx, path_idx, visited_array)
+    # 4) Global best solution tracking
     # --------------------------
     best_cost = math.inf
     best_path_idx = []
 
-    # visited array for the start state
-    visited_start = [False] * n
-    visited_start[start_idx] = True
+    # --------------------------
+    # 5) Depth-First Search (recursive)
+    # --------------------------
+    def dfs(current_node_idx, visited_count, current_cost, path_idx, visited_array):
+        nonlocal best_cost, best_path_idx
 
-    # initial path
-    init_path = [start_idx]
-    init_cost = 0.0
-    init_visited_count = 1
+        # If we've visited all nodes, finalize by returning to start
+        if visited_count == n:
+            last_label = label_of[current_node_idx]
+            start_label = label_of[start_idx]
+            total_cost = current_cost + graph.get_distance(last_label, start_label)
+            if total_cost < best_cost:
+                best_cost = total_cost
+                best_path_idx = path_idx[:]
+            return
 
-    # initial bound
-    init_bound = lower_bound_estimate(init_cost, visited_start)
+        # Otherwise, branch over unvisited nodes
+        for next_node_idx in range(n):
+            if not visited_array[next_node_idx]:
+                # Cost to move to the next node
+                current_label = label_of[current_node_idx]
+                next_label = label_of[next_node_idx]
+                next_cost = current_cost + graph.get_distance(current_label, next_label)
 
-    # Priority queue (min-heap) of states
-    # We'll push a tuple (bound, cost, visited_count, last_node_idx, path_idx, visited_array)
-    pq = []
-    heapq.heappush(
-        pq,
-        (init_bound, init_cost, init_visited_count, start_idx, init_path, visited_start)
+                # Compute bound
+                visited_array[next_node_idx] = True
+                estimate = lower_bound_estimate(next_cost, visited_array)
+                # If bounding is promising, recurse deeper
+                if estimate < best_cost:
+                    path_idx.append(next_node_idx)
+                    dfs(next_node_idx, visited_count + 1, next_cost, path_idx, visited_array)
+                    path_idx.pop()
+
+                # Backtrack
+                visited_array[next_node_idx] = False
+
+    # --------------------------
+    # 6) Launch DFS from the start node
+    # --------------------------
+    visited = [False] * n
+    visited[start_idx] = True
+    dfs(
+        current_node_idx=start_idx,
+        visited_count=1,
+        current_cost=0.0,
+        path_idx=[start_idx],
+        visited_array=visited
     )
 
     # --------------------------
-    # 5) Best-First Search
-    # --------------------------
-    while pq:
-        # Pop the state with the smallest bound
-        bound, cost, visited_count, last_node_idx, path_idx, visited_array = heapq.heappop(pq)
-
-        # If this state's bound is already >= best_cost, we can prune all further expansions
-        if bound >= best_cost:
-            break
-
-        # If we've visited all nodes, finalize by returning to start node
-        if visited_count == n:
-            # compute the cost to go back to start node
-            last_label = label_of[last_node_idx]
-            start_label = label_of[start_idx]
-            final_cost = cost + graph.get_distance(last_label, start_label)
-
-            if final_cost < best_cost:
-                best_cost = final_cost
-                best_path_idx = path_idx
-            continue
-
-        # Otherwise, branch by visiting each unvisited neighbor
-        for next_node_idx in range(n):
-            if not visited_array[next_node_idx]:
-                last_label = label_of[last_node_idx]
-                next_label = label_of[next_node_idx]
-                next_cost = cost + graph.get_distance(last_label, next_label)
-
-                # Build next visited array (copy)
-                next_visited = visited_array[:]
-                next_visited[next_node_idx] = True
-
-                # Estimate new bound
-                next_bound = lower_bound_estimate(next_cost, next_visited)
-                if next_bound < best_cost:
-                    # Construct new path
-                    next_path = path_idx + [next_node_idx]
-                    # Push the new state
-                    heapq.heappush(
-                        pq,
-                        (
-                            next_bound,
-                            next_cost,
-                            visited_count + 1,
-                            next_node_idx,
-                            next_path,
-                            next_visited
-                        )
-                    )
-
-    # --------------------------
-    # 6) Reconstruct final path (labels)
+    # 7) Reconstruct final path (labels) & push result
     # --------------------------
     best_path_labels = [label_of[idx] for idx in best_path_idx]
     if best_path_labels:
         best_path_labels.append(start_node)  # close the loop for clarity
 
-    # return best_path_labels, best_cost
-    result_queue.put((best_path_labels, best_cost))  # Send the result back
+    result_queue.put((best_path_labels, best_cost))
