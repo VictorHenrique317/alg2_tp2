@@ -7,6 +7,7 @@ import contextlib
 import os
 import functools
 from concurrent.futures import ThreadPoolExecutor, TimeoutError
+import sys
 
 def parse_file(file_path: str) -> dict:
     nodes = dict()
@@ -63,12 +64,15 @@ def save_graphs_into_disk(): # Just needed once
         print(f'({100*progress/len(test_files): .2f}% done...)\n')
 
 if __name__ == '__main__':
+    sys.setrecursionlimit(1500)
     base_dir = "graphs"
     graph_pickles = os.listdir(base_dir)
 
     # save_graphs_into_disk()
 
     for pickle in graph_pickles:
+        # if pickle != "d1291_tsp.pkl":
+        #     continue
         # nodes = {
         #     "1": (16.47, 96.10),
         #     "2": (16.47, 94.44),
@@ -117,6 +121,6 @@ if __name__ == '__main__':
             # Retrieve the result from the queue if the function finished in time
             if not result_queue.empty():
                 best_route, best_cost = result_queue.get()
-                print(f"Best Route: {best_route}, Best Cost: {best_cost}")
+                print(f"INFO: Best Route: {best_route}, Best Cost: {best_cost}")
             else:
                 print("No result was returned.")

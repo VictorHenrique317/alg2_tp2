@@ -113,16 +113,18 @@ def branch_and_bound(graph, start_node, result_queue):
     # --------------------------
     # 6) Launch DFS from the start node
     # --------------------------
-    visited = [False] * n
-    visited[start_idx] = True
-    dfs(
-        current_node_idx=start_idx,
-        visited_count=1,
-        current_cost=0.0,
-        path_idx=[start_idx],
-        visited_array=visited
-    )
-
+    try:
+        visited = [False] * n
+        visited[start_idx] = True
+        dfs(
+            current_node_idx=start_idx,
+            visited_count=1,
+            current_cost=0.0,
+            path_idx=[start_idx],
+            visited_array=visited
+        )
+    except RecursionError as e:
+        print(f"Recursion depth exceeded")
     # --------------------------
     # 7) Reconstruct final path (labels) & push result
     # --------------------------
@@ -131,3 +133,4 @@ def branch_and_bound(graph, start_node, result_queue):
         best_path_labels.append(start_node)  # close the loop for clarity
 
     result_queue.put((best_path_labels, best_cost))
+    return result_queue
