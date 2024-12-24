@@ -88,6 +88,7 @@ def branch_and_bound(graph, start_node, result_queue):
             if total_cost < best_cost:
                 best_cost = total_cost
                 best_path_idx = path_idx[:]
+                result_queue.put((best_path_idx, best_cost))
             return
 
         # Otherwise, branch over unvisited nodes

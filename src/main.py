@@ -115,6 +115,9 @@ if __name__ == '__main__':
 
         if process.is_alive():
             print("Function timed out. Terminating process...")
+            if not result_queue.empty():
+                _, minimized_cost = result_queue.get()
+                print(f"INFO: Minimized Cost: {minimized_cost}")
             process.terminate()  # Forcefully terminate the process
             process.join()  # Ensure the process finishes cleanly
         else:
