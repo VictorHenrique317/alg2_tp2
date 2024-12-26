@@ -47,7 +47,7 @@ def save_graphs_into_disk():
         progress += 1
         print(f"Processing file: {test_file}")
         graph = create_graph(f'{base_dir}/{test_file}')
-        if len(graph.get_nodes()) > 5000:
+        if len(graph.get_nodes()) > 2000:
             print("Skipping file due to high number of nodes...")
             continue
         graph.calculate_distances()
