@@ -1,12 +1,7 @@
 from multiprocessing import Process, Queue
-import time
 from branch_and_bound import *
 from graph import Graph
 import os
-import contextlib
-import os
-import functools
-from concurrent.futures import ThreadPoolExecutor, TimeoutError
 import sys
 
 def parse_file(file_path: str) -> dict:
@@ -44,7 +39,7 @@ def create_graph(file_path):
     graph = Graph(nodes)
     return graph
 
-def save_graphs_into_disk(): # Just needed once 
+def save_graphs_into_disk():
     base_dir = "test_data"
     test_files = os.listdir(base_dir)
     progress = 0
@@ -68,11 +63,11 @@ if __name__ == '__main__':
     base_dir = "graphs"
     graph_pickles = os.listdir(base_dir)
 
-    # save_graphs_into_disk()
+    # save_graphs_into_disk() # Just needed once
 
     for pickle in graph_pickles:
-        # if pickle != "d1291_tsp.pkl":
-        #     continue
+        if pickle != "d1291_tsp.pkl":
+            continue
         # nodes = {
         #     "1": (16.47, 96.10),
         #     "2": (16.47, 94.44),
@@ -89,37 +84,33 @@ if __name__ == '__main__':
         #     "13": (19.41, 97.13),
         #     "14": (20.09, 94.55),
         # }
-        # Best route found: ['1', '10', '9', '11', '8', '13', '7', '12', '6', '5', '4', '3', '14', '2', '1']
-        # Best cost: 30.878503892588
 
-        # nodes = {
-        #     "1": (16.47, 96.10),
-        #     "2": (16.47, 94.44),
-        #     "3": (20.09, 92.54),
-        #     "4": (22.39, 93.37),
-        #     "5": (25.23, 97.24),
-        #     "6": (22.00, 96.05),
-        # }
+        nodes = {
+            "1": (16.47, 96.10),
+            "2": (16.47, 94.44),
+            "3": (20.09, 92.54),
+            "4": (22.39, 93.37),
+            "5": (25.23, 97.24),
+            "6": (22.00, 96.05),
+        }
 
-        # graph = Graph(nodes)
-        graph = Graph.load(f'{base_dir}/{pickle}')
+        graph = Graph(nodes)
+        # graph = Graph.load(f'{base_dir}/{pickle}')
 
         result_queue = Queue()
 
-        # Create a new process
         process = Process(target=branch_and_bound, args=(graph, 1, result_queue))
         process.start()
 
-        # Wait for the process to complete or timeout
-        process.join(timeout=1800)  # 30 minutes
+        process.join(timeout=1800) # 30 minutes
 
         if process.is_alive():
             print("Function timed out. Terminating process...")
             if not result_queue.empty():
                 _, minimized_cost = result_queue.get()
                 print(f"INFO: Minimized Cost: {minimized_cost}")
-            process.terminate()  # Forcefully terminate the process
-            process.join()  # Ensure the process finishes cleanly
+            process.terminate()
+            process.join()
         else:
             # Retrieve the result from the queue if the function finished in time
             if not result_queue.empty():

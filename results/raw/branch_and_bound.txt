@@ -1,0 +1,179 @@
+Graph loaded from graphs/lin105_tsp.pkl
+Function timed out. Terminating process...
+INFO: Minimized Cost: 36478.170682675605
+
+Graph loaded from graphs/linhp318_tsp.pkl
+Function timed out. Terminating process...
+INFO: Minimized Cost: 119866.892426231
+
+Graph loaded from graphs/kroD100_tsp.pkl
+Function timed out. Terminating process...
+INFO: Minimized Cost: 170990.65209342638
+
+Graph loaded from graphs/kroB200_tsp.pkl
+Function timed out. Terminating process...
+INFO: Minimized Cost: 327452.3654812089
+
+Graph loaded from graphs/fl1400_tsp.pkl
+Function timed out. Terminating process...
+INFO: Minimized Cost: 172582.28847455833
+
+Graph loaded from graphs/d198_tsp.pkl
+Function timed out. Terminating process...
+INFO: Minimized Cost: 22514.12084286643
+
+Graph loaded from graphs/kroA100_tsp.pkl
+Function timed out. Terminating process...
+INFO: Minimized Cost: 191393.73811099658
+
+Graph loaded from graphs/d493_tsp.pkl
+Function timed out. Terminating process...
+INFO: Minimized Cost: 113552.05380101105
+
+Graph loaded from graphs/kroB150_tsp.pkl
+Function timed out. Terminating process...
+INFO: Minimized Cost: 273236.42354158557
+
+Graph loaded from graphs/eil51_tsp.pkl
+Function timed out. Terminating process...
+INFO: Minimized Cost: 1313.4683444443458
+
+Graph loaded from graphs/ch150_tsp.pkl
+Function timed out. Terminating process...
+INFO: Minimized Cost: 52812.150238125665
+
+Graph loaded from graphs/pcb1173_tsp.pkl
+Function timed out. Terminating process...
+INFO: Minimized Cost: 123874.17146097188
+
+Graph loaded from graphs/vm1748_tsp.pkl
+Recursion depth exceeded
+INFO: Memory before: 853389312 bytes
+INFO: Memory after: 854020096 bytes
+INFO: Memory consumed: 630784 bytes
+INFO: Time elapsed: 1.8184659481048584 seconds
+INFO: Best Route: [], Best Cost: inf
+
+Graph loaded from graphs/fl417_tsp.pkl
+Function timed out. Terminating process...
+INFO: Minimized Cost: 55387.19253437542
+
+Graph loaded from graphs/ts225_tsp.pkl
+Function timed out. Terminating process...
+INFO: Minimized Cost: 276532.41192840174
+
+Graph loaded from graphs/berlin52_tsp.pkl
+Function timed out. Terminating process...
+INFO: Minimized Cost: 22205.617692710774
+
+Graph loaded from graphs/d1291_tsp.pkl
+Function timed out. Terminating process...
+INFO: Minimized Cost: 150990.39565981817
+
+Graph loaded from graphs/d657_tsp.pkl
+Function timed out. Terminating process...
+INFO: Minimized Cost: 232140.2389199038
+
+Graph loaded from graphs/u724_tsp.pkl
+Function timed out. Terminating process...
+INFO: Minimized Cost: 157457.6890859094
+
+Graph loaded from graphs/a280_tsp.pkl
+Function timed out. Terminating process...
+INFO: Minimized Cost: 2818.621642239474
+
+Graph loaded from graphs/kroC100_tsp.pkl
+Function timed out. Terminating process...
+INFO: Minimized Cost: 183465.31118981243
+
+Graph loaded from graphs/vm1084_tsp.pkl
+Function timed out. Terminating process...
+INFO: Minimized Cost: 5350742.143121182
+
+Graph loaded from graphs/kroA150_tsp.pkl
+Function timed out. Terminating process...
+INFO: Minimized Cost: 287850.34398418805
+
+Graph loaded from graphs/eil101_tsp.pkl
+Function timed out. Terminating process...
+INFO: Minimized Cost: 2064.487021559086
+
+Graph loaded from graphs/u159_tsp.pkl
+Function timed out. Terminating process...
+INFO: Minimized Cost: 43375.70689190255
+
+Graph loaded from graphs/tsp225_tsp.pkl
+Function timed out. Terminating process...
+INFO: Minimized Cost: 10299.896030584343
+
+Graph loaded from graphs/gil262_tsp.pkl
+Function timed out. Terminating process...
+INFO: Minimized Cost: 26295.63507597223
+
+Graph loaded from graphs/eil76_tsp.pkl
+Function timed out. Terminating process...
+INFO: Minimized Cost: 1974.7138902540141
+
+Graph loaded from graphs/lin318_tsp.pkl
+Function timed out. Terminating process...
+INFO: Minimized Cost: 119866.892426231
+
+Graph loaded from graphs/pcb442_tsp.pkl
+Function timed out. Terminating process...
+INFO: Minimized Cost: 221435.55546749753
+
+Graph loaded from graphs/u1817_tsp.pkl
+Recursion depth exceeded
+INFO: Memory before: 740978688 bytes
+INFO: Memory after: 741609472 bytes
+INFO: Memory consumed: 630784 bytes
+INFO: Time elapsed: 1.9028873443603516 seconds
+INFO: Best Route: [], Best Cost: inf
+
+Graph loaded from graphs/bier127_tsp.pkl
+Function timed out. Terminating process...
+INFO: Minimized Cost: 393998.27588724653
+
+Graph loaded from graphs/nrw1379_tsp.pkl
+Function timed out. Terminating process...
+INFO: Minimized Cost: 712360.7210851508
+
+Graph loaded from graphs/u1060_tsp.pkl
+Function timed out. Terminating process...
+INFO: Minimized Cost: 260168.41996461301
+
+Graph loaded from graphs/kroB100_tsp.pkl
+Function timed out. Terminating process...
+INFO: Minimized Cost: 157184.68321921918
+
+Graph loaded from graphs/d1655_tsp.pkl
+Recursion depth exceeded
+INFO: Memory before: 623591424 bytes
+INFO: Memory after: 624414720 bytes
+INFO: Memory consumed: 823296 bytes
+INFO: Time elapsed: 1.5928435325622559 seconds
+INFO: Best Route: [], Best Cost: inf
+
+Graph loaded from graphs/u1432_tsp.pkl
+Function timed out. Terminating process...
+INFO: Minimized Cost: 183241.16952931407
+
+Graph loaded from graphs/u574_tsp.pkl
+Function timed out. Terminating process...
+INFO: Minimized Cost: 40219.367335503186
+
+Graph loaded from graphs/ch130_tsp.pkl
+Function timed out. Terminating process...
+INFO: Minimized Cost: 47800.777963378816
+
+Graph loaded from graphs/p654_tsp.pkl
+Function timed out. Terminating process...
+INFO: Minimized Cost: 107781.20528511693
+
+Graph loaded from graphs/kroE100_tsp.pkl
+Function timed out. Terminating process...
+INFO: Minimized Cost: 188349.78207301185
+
+Graph loaded from graphs/kroA200_tsp.pkl
+Function timed out. Terminating process...
+INFO: Minimized Cost: 373943.37718539895

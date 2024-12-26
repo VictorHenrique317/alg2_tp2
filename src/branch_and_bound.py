@@ -6,16 +6,15 @@ from utils import measure
 def branch_and_bound(graph, start_node, result_queue):
     """
     Solve TSP using a Branch-and-Bound approach with Depth-First Search.
-    Distances are fetched via graph.get_distance(u,v) on the fly.
+    Distances are fetched via graph.get_distance(u,v).
 
-    :param graph: a Graph object with:
-                  - graph.get_nodes(): list of node labels
-                  - graph.get_distance(u, v): float, distance between node u and node v
-    :param start_node: label of the node to start from; if None, pick an arbitrary node
-    :param result_queue: a multiprocessing or threading queue to store (best_path, best_cost)
+    Args: 
+        graph (Graph): a graph object
+        start_node (int): label of the node to start from; if None, pick an arbitrary node
+        result_queue (multiprocessing.Queue): a multiprocessing or threading queue to store (best_path, best_cost)
     """
     # --------------------------
-    # 1) Preliminaries
+    # 1) Pre-processing
     # --------------------------
     node_list = graph.get_nodes()
     n = len(node_list)
@@ -26,15 +25,13 @@ def branch_and_bound(graph, start_node, result_queue):
         result_queue.put((node_list, 0.0))
         return
 
-    # Map node_label -> index
-    index_of = {node: idx for idx, node in enumerate(node_list)}
-    # Map index -> node_label
-    label_of = {idx: node for node, idx in index_of.items()}
+    index_of = {node: idx for idx, node in enumerate(node_list)} # Map node_label -> index
+    label_of = {idx: node for node, idx in index_of.items()} # Map index -> node_label
 
     # Decide on start node
     if start_node is None:
         start_node = node_list[0]
-    start_node = str(start_node)  # ensure it's a string if needed
+    start_node = str(start_node)
     start_idx = index_of[start_node]
 
     # --------------------------

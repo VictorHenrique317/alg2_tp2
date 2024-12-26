@@ -5,6 +5,20 @@ import pickle
 
 class Graph:
     def __init__(self, nodes: dict):
+        """
+        Initializes a graph with the given nodes.
+
+        Args:
+            nodes (dict): A dictionary where keys are node identifiers and values are their coordinates.
+        Returns:
+            None
+        If the nodes dictionary is empty, the function returns immediately without creating a graph.
+        Otherwise, it initializes a graph, sets up node positions, and adds nodes to the graph.
+        Attributes:
+            calculated_distances (bool): A flag indicating whether distances have been calculated and stored in memory.
+            K (networkx.Graph): The graph object.
+            pos (dict): A dictionary mapping nodes to their coordinates.
+        """
         if nodes == {}:
             return
         
@@ -17,6 +31,18 @@ class Graph:
         print(f"-> Graph created for {len(nodes)} nodes")
 
     def get_distance(self, u, v) -> float:
+        """
+        Calculate the distance between two nodes u and v.
+        If the distances have already been calculated and stored, it retrieves the 
+        distance from the edge data. Otherwise, it calculates the Euclidean distance 
+        between the positions of the two nodes.
+
+        Args:
+            u: The first node.
+            v: The second node.
+        Returns:
+            float: The distance between node u and node v.
+        """
         if self.calculated_distances == True:
             edge_data = self.K.get_edge_data(u, v)
             return edge_data['weight']
@@ -36,12 +62,28 @@ class Graph:
         return list(self.pos.values())
 
     def calculate_distances(self): # Heavy computation
+        """
+        Calculate the distances between all pairs of nodes in the graph.
+        This method performs a heavy computation to calculate the Euclidean distances
+        between all pairs of nodes in the graph. The distances are computed one-by-one
+        to optimize memory usage. The computed distances are then added as weighted
+        edges to the graph.
+        The method prints progress updates to the console to indicate the percentage
+        of the total matrix lines processed.
+
+        Args:
+            calculated_distances (bool): A flag indicating whether the distances have
+                                         been calculated.
+            K (networkx.Graph): The graph object to which the weighted edges are added.
+        Raises:
+            ValueError: If the number of nodes or coordinates is inconsistent.
+        """
         node_labels = self.get_nodes()
         coordinates = np.array(self.get_coordinates())
 
         num_nodes = len(node_labels)
         edges = []
-        print(f"-> Calculating distances in chunks to optimize memory usage...")
+        print(f"-> Calculating distances one-by-one to optimize memory usage...")
         line = 0
         for i in range(num_nodes):
             line += 1
@@ -60,6 +102,22 @@ class Graph:
 
     @staticmethod
     def load(filepath: str):
+        """
+    Load a graph from a file.
+
+    This method reads a graph object from a file using the pickle module.
+    The file should contain a dictionary with keys 'graph', 'pos', and 'calculated_distances'.
+
+    Args:
+        filepath (str): The path to the file from which to load the graph.
+
+    Returns:
+        Graph: The graph object loaded from the file.
+
+    Raises:
+        FileNotFoundError: If the file does not exist.
+        pickle.UnpicklingError: If the file is not a valid pickle file.
+    """
         with open(filepath, 'rb') as file:
             data = pickle.load(file)
         graph = Graph({})
@@ -70,6 +128,21 @@ class Graph:
         return graph
     
     def save(self, filepath: str):
+        """
+        Saves the graph data to a file in binary format using pickle. This ables the
+        user to save the graph structure, node positions, and precomputed distances, so that
+        the graph can be loaded later without having to do this computation again.
+
+        The data saved includes:
+            - 'graph': The graph structure (self.K).
+            - 'pos': The positions of the nodes (self.pos).
+            - 'calculated_distances': The precomputed distances (self.calculated_distances).
+
+        The file is saved in binary format.
+
+        Args:
+            filepath (str): The path to the file where the graph data will be saved.
+        """
         data = {
             'graph': self.K,
             'pos': self.pos,
@@ -80,6 +153,13 @@ class Graph:
         print(f"Graph saved to {filepath}")
 
     def draw(self, file_path, title):
+        """
+        Draws the graph and saves it to a file.
+        
+        Args:
+            file_path (str): The path where the image file will be saved.
+            title (str): The title of the graph.
+        """
         plt.figure(figsize=(14, 10))
         plt.title(title, fontsize=12, fontweight='bold')
 
