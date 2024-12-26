@@ -1,3 +1,4 @@
+import matplotlib.pyplot as plt
 import os
 import pandas as pd
 
@@ -39,4 +40,97 @@ def print_nb_nodes(directory="test_data"):
     except Exception as e:
         print(f"Error accessing directory '{directory}': {e}")
 
-print_nb_nodes()
+
+def plot_worse_percentage(csv_file, fig_path):
+    """
+    Plots a bar chart showing the values of worse_percentage for each tsp_problem.
+
+    Args:
+        csv_file (str): Path to the CSV file containing the data.
+    """
+    data = pd.read_csv(csv_file)
+
+    data = data.dropna(subset=['worse_percentage'])
+
+    data['worse_percentage'] = pd.to_numeric(data['worse_percentage'])
+
+    plt.figure(figsize=(12, 6))
+    plt.bar(data['tsp_problem'], data['worse_percentage'], color='skyblue')
+
+    # Adding labels and title
+    plt.xlabel('TSP Problem', fontsize=12)
+    plt.ylabel('Worse Percentage', fontsize=12)
+    plt.title('Worse Percentage for Each TSP Problem', fontsize=14)
+    plt.xticks(rotation=45, ha='right', fontsize=10)
+    plt.tight_layout()
+    
+    plt.savefig(fig_path)
+    plt.close()
+
+def plot_worse_percentage_vs_nodes(csv_file, fig_path):
+    """
+    Creates a line plot of worse_percentage (y-axis) as a function of number_nodes (x-axis).
+    The number of nodes will be sorted in ascending order.
+
+    Args:
+        csv_file (str): Path to the CSV file containing the data.
+    """
+    data = pd.read_csv(csv_file)
+
+    data = data.dropna(subset=['worse_percentage', 'number_nodes'])
+
+    data['worse_percentage'] = pd.to_numeric(data['worse_percentage'])
+    data['number_nodes'] = pd.to_numeric(data['number_nodes'])
+
+    data = data.sort_values(by='number_nodes')
+
+    plt.figure(figsize=(10, 6))
+    plt.plot(data['number_nodes'], data['worse_percentage'], marker='o', linestyle='-', color='blue')
+
+    plt.xlabel('Number of Nodes', fontsize=12)
+    plt.ylabel('Worse Percentage', fontsize=12)
+    plt.title('Worse Percentage vs Number of Nodes', fontsize=14)
+
+    plt.grid(True, linestyle='--', alpha=0.6)
+
+    plt.tight_layout()
+    plt.savefig(fig_path)
+    plt.close()
+
+def display_top_five_worse_percentages(csv_file):
+    """
+    Displays the top five worse percentages and their respective TSP problems.
+
+    Args:
+        csv_file (str): Path to the CSV file containing the data.
+    """
+    data = pd.read_csv(csv_file)
+
+    data = data.dropna(subset=['worse_percentage'])
+
+    data['worse_percentage'] = pd.to_numeric(data['worse_percentage'])
+
+    top_five = data.nlargest(5, 'worse_percentage')
+
+    print("Top Five Worse Percentages:")
+    print(top_five[['tsp_problem', 'worse_percentage']])
+
+def display_top_five_smallest_percentages(csv_file):
+    """
+    Displays the top five smallest worse percentages and their respective TSP problems.
+
+    Args:
+        csv_file (str): Path to the CSV file containing the data.
+    """
+    data = pd.read_csv(csv_file)
+
+    data = data.dropna(subset=['worse_percentage'])
+
+    data['worse_percentage'] = pd.to_numeric(data['worse_percentage'])
+
+    smallest_five = data.nsmallest(5, 'worse_percentage')
+
+    print("Top Five Smallest Worse Percentages:")
+    print(smallest_five[['tsp_problem', 'worse_percentage']])
+
+display_top_five_smallest_percentages("results/processed/branch_and_bound.csv")

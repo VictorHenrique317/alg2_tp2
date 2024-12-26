@@ -1,4 +1,4 @@
-# TP2 Alg2 - Algorithms for the Traveling Salesman Problem
+# TP2 Alg2 - Solutions for hard problems
 ![berlin52_tsp](plots/graphs/berlin52_tsp.png)
 This repository contains the Branch-And-Bound, Twice-around-the-tree and Christofides solvers for the Traveling Salesman Problem (TSP). The project includes functionalities for parsing TSP data, creating and manipulating graphs, making experiments and visualizing the results.
 
