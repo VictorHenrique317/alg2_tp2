@@ -25,6 +25,7 @@ The project requires the following Python packages:
 - `matplotlib`
 - `numpy`
 - `psutil`
+- `pandas`
 
 You can install the required packages using:
 
