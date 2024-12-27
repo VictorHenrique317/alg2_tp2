@@ -1,5 +1,7 @@
 from multiprocessing import Process, Queue
 from branch_and_bound import *
+from christofides import *
+from twice_around_tree import *
 from graph import Graph
 import os
 import sys
