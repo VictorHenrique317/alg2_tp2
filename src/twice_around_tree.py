@@ -52,8 +52,12 @@ def twice_around_tree(graph, start_node, result_queue):
     # --------------------------
     # 2) Compute the path
     # --------------------------
-    path = dfs_preorder(mst_adj, start_node)
-    path.append(start_node)
+    try:
+        path = dfs_preorder(mst_adj, start_node)
+        path.append(start_node)
+
+    except RecursionError as e:
+        print(f"Recursion depth exceeded")
 
     # --------------------------
     # 3) Calculate the path length

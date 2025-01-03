@@ -68,8 +68,8 @@ if __name__ == '__main__':
     # save_graphs_into_disk() # Just needed once
 
     for pickle in graph_pickles:
-        if pickle != "d1291_tsp.pkl":
-            continue
+        # if pickle != "d1291_tsp.pkl":
+        #     continue
         # nodes = {
         #     "1": (16.47, 96.10),
         #     "2": (16.47, 94.44),
@@ -87,21 +87,22 @@ if __name__ == '__main__':
         #     "14": (20.09, 94.55),
         # }
 
-        nodes = {
-            "1": (16.47, 96.10),
-            "2": (16.47, 94.44),
-            "3": (20.09, 92.54),
-            "4": (22.39, 93.37),
-            "5": (25.23, 97.24),
-            "6": (22.00, 96.05),
-        }
+        # nodes = {
+        #     "1": (16.47, 96.10),
+        #     "2": (16.47, 94.44),
+        #     "3": (20.09, 92.54),
+        #     "4": (22.39, 93.37),
+        #     "5": (25.23, 97.24),
+        #     "6": (22.00, 96.05),
+        # }
 
-        graph = Graph(nodes)
-        # graph = Graph.load(f'{base_dir}/{pickle}')
+        # graph = Graph(nodes)
+        graph = Graph.load(f'{base_dir}/{pickle}')
+        
 
         result_queue = Queue()
 
-        process = Process(target=branch_and_bound, args=(graph, 1, result_queue))
+        process = Process(target=chistofides, args=(graph, 1, result_queue))
         process.start()
 
         process.join(timeout=1800) # 30 minutes
@@ -120,3 +121,4 @@ if __name__ == '__main__':
                 print(f"INFO: Best Route: {best_route}, Best Cost: {best_cost}")
             else:
                 print("No result was returned.")
+    
