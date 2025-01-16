@@ -57,4 +57,4 @@ python src/main.py
 ```
 
 ## Results
-All the results of our experiments are saved in the `results` directory. With the aggregate results table saved in the `final_results.csv` file.
+All the results of our experiments are saved in the `results` directory. With the aggregate results table saved in the `final_results.csv` file. A report with an analysis of the experiments is avaiable in the `relatorio.pdf` located on the project root directory.
